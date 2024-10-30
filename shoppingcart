@@ -1,0 +1,38 @@
+# ShoppingCart.py
+
+'''
+This class manages the list of get_items() that a customer wants to purchase. 
+It maintains e-books and their respective quantities. 
+This class provides the following functionalities for 
+customers: adding/removing an e-book, calculating the total price for the get_items() in the cart, 
+and also, clearing all get_items() in the cart if needed. 
+It provides the string representation of the current cart contents.
+'''
+
+class ShoppingCart:
+    def __init__(self):
+        self._items = {}  # Key: Ebook, Value: quantity
+
+    def add_item(self, ebook, quantity=1):
+        if ebook in self._items:
+            self._items[ebook] += quantity
+        else:
+            self._items[ebook] = quantity
+
+    def remove_item(self, ebook):
+        if ebook in self._items:
+            del self._items[ebook]
+
+    def clear_cart(self):
+        self._items.clear()
+
+    
+    def get_items(self):
+        return self._items
+
+    def get_total_price(self):
+        return sum(ebook.get_price() * quantity for ebook, quantity in self.get_items().items())
+
+    def __str__(self):
+        cart_items = [f"{ebook.get_title()} x {quantity}" for ebook, quantity in self.get_items().items()]
+        return f"Shopping Cart: {', '.join(cart_items) if cart_items else 'Empty'}"
