@@ -1,0 +1,53 @@
+# Order.py
+'''
+This class represents an order made by a customer. 
+It will include customer information and the shopping cart of the customer. 
+It computes for the order's total price, inclusive of discounts for being a loyalty 
+member and for bulk purchase, and the VAT. The class also includes methods that return 
+details about the order and a string summary of the order.
+'''
+from DiscountCalculator import DiscountCalculator
+from Pricing import Pricing
+
+class Order:
+    def __init__(self, customer, cart):
+        self._customer = customer
+        self._cart = cart
+        self._discount_calculator = DiscountCalculator()
+        self._pricing = Pricing()
+        self._total_price = self.calculate_total_price()
+
+    
+    def customer(self):
+        return self._customer
+
+  
+    def cart(self):
+        return self._cart
+
+   
+    def total_price(self):
+        return self._total_price
+
+    def calculate_total_price(self):
+        # Calculate subtotal
+        subtotal = self._cart.get_total_price()
+        
+        # Calculate discount
+        discount = self._discount_calculator.calculate_discount(self.cart(), self.customer())
+
+        # Apply discount to subtotal
+        total_after_discount = subtotal - discount
+        
+        # Apply VAT
+        total_with_vat = self._pricing.calculate_total_with_vat(total_after_discount)
+        
+        return round(total_with_vat, 2)
+
+    def __str__(self):
+        total_discount = self._discount_calculator.calculate_discount(self.cart(), self.customer())
+        return (f"Order for {self._customer.get_name()}\n" +
+                f"Subtotal: ${self.cart().get_total_price():.2f}\n" +
+                f"Discount: -${total_discount:.2f}\n" +
+                f"Total Price (with discounts and VAT): ${self.total_price():.2f}")
+
