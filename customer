@@ -1,0 +1,45 @@
+'''
+Models a customer of the e-bookstore. It maintains personal information about the customers,
+ which includes their name, email, and whether they are part of the loyalty program or not. 
+This class provides methods to retrieve the customer information and their loyalty status.
+'''
+
+
+class Customer:
+    def __init__(self, customer_id, name, email, is_loyalty_member=False):
+        self._customer_id = customer_id
+        self._name = name
+        self._email = email
+        self._is_loyalty_member = is_loyalty_member
+
+
+    def get_customer_id(self):
+        return self._customer_id
+
+   
+    def get_name(self):
+        return self._name
+
+    
+    def set_name(self, value):
+        self._name = value
+
+  
+    def get_email(self):
+        return self._email
+
+  
+    def set_email(self, value):
+        self._email = value
+
+
+    def get_is_loyalty_member(self):
+        return self._is_loyalty_member
+
+    
+    def is_loyalty_member(self, value):
+        self._is_loyalty_member = value
+
+    def __str__(self):
+        loyalty_status = "Loyalty Member" if self._is_loyalty_member else "Regular Customer"
+        return f"Customer(ID: {self._customer_id}, Name: {self._name}, Email: {self._email}, Status: {loyalty_status})"
