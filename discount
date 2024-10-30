@@ -1,0 +1,27 @@
+# DiscountCalculator.py
+
+'''
+ It is responsible for computing any discount eligibility 
+ based on factors like customer loyalty membership or bulk purchase. 
+ This class contains the logic to calculate the overall discount eligible on an order.
+'''
+
+class DiscountCalculator:
+    def __init__(self):
+        self.loyalty_discount_rate = 0.10  # 10% discount for loyalty members
+        self.bulk_discount_rate = 0.20      # 20% discount for bulk purchases
+        self.bulk_purchase_threshold = 5     # Threshold for bulk purchase discount
+
+    def calculate_discount(self, cart, customer):
+        total_discount = 0.0
+        
+        # Check for loyalty discount
+        if customer.get_is_loyalty_member():
+            total_discount += self.loyalty_discount_rate * cart.get_total_price()
+        
+        # Check for bulk discount
+        if sum(cart.get_items().values()) >= self.bulk_purchase_threshold:
+            total_discount += self.bulk_discount_rate * cart.get_total_price()
+        
+        return total_discount
+
