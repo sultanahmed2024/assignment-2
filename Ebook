@@ -1,0 +1,52 @@
+'''
+This class models an e-book existing in the store. It includes attributes like title, 
+author, date of publication, genre, and price. 
+This class provides methods for accessing and modifying the details related to an e-book.
+'''
+class Ebook:
+    def __init__(self, ebook_id, title, author, publication_date, genre, price):
+        self._ebook_id = ebook_id
+        self._title = title
+        self._author = author
+        self._publication_date = publication_date
+        self._genre = genre
+        self._price = price
+
+
+    def get_ebook_id(self):
+        return self._ebook_id
+
+
+    def get_title(self):
+        return self._title
+
+   
+    def set_title(self, value):
+        self._title = value
+
+
+    def get_author(self):
+        return self._author
+
+
+    def get_publication_date(self):
+        return self._publication_date
+
+
+    def set_genre(self):
+        return self._genre
+
+
+    def get_price(self):
+        return self._price
+
+    
+    def set_price(self, value):
+        if value >= 0:
+            self._price = value
+        else:
+            raise ValueError("Price cannot be negative.")
+
+    def __str__(self):
+        return f"Ebook(ID: {self._ebook_id}, Title: '{self._title}', Author: {self._author}, " \
+               f"Date: {self._publication_date}, Genre: {self._genre}, Price: ${self._price:.2f})"
