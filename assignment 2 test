@@ -1,0 +1,90 @@
+from Ebook import Ebook
+from Customer import Customer
+from ShoppingCart import ShoppingCart
+from Order import Order
+from Invoice import Invoice
+from EbookManager import *
+
+# Initialize global objects for testing
+ebooks = [
+    Ebook(ebook_id=1, title="Learn Python", author="Jane Doe", publication_date="2023-01-01", genre="Programming", price=29.99),
+    Ebook(ebook_id=2, title="Data Science Basics", author="John Smith", publication_date="2023-06-15", genre="Data Science", price=39.99),
+]
+
+customers = [
+    Customer(customer_id=101, name="Alex Johnson", email="alex@example.com", is_loyalty_member=True),
+]
+
+cart = ShoppingCart()
+current_customer = customers[0]  # Automatically select the first customer for testing
+
+def run_tests():
+    global ebooks
+    global customers
+    global cart
+    global current_customer
+    print("Running Tests...\n")
+
+    # Test adding an e-book
+    print("Test: Adding a new e-book")
+    new_ebook = Ebook(ebook_id=3, title="Machine Learning", author="Alice Smith", publication_date="2023-07-20", genre="AI", price=49.99)
+    ebooks.append(new_ebook)
+    view_all_ebooks()
+
+    # Test modifying an e-book
+    print("\nTest: Modifying an existing e-book")
+    new_ebook.set_price(39.99)  # Modify the price
+    view_all_ebooks()
+
+    # Test removing an e-book
+    print("\nTest: Removing an e-book")
+    ebooks = [ebook for ebook in ebooks if ebook.get_ebook_id() != 1]
+    view_all_ebooks()
+
+    # Test adding a customer
+    print("\nTest: Adding a new customer")
+    new_customer = Customer(customer_id=102, name="Emily Davis", email="emily@example.com", is_loyalty_member=False)
+    customers.append(new_customer)
+    view_all_customers()
+
+    # Test modifying a customer
+    print("\nTest: Modifying a customer")
+    customers[1].set_email("emily.davis@example.com")  # Modify email for second customer
+    print(f"Updated email for {customers[1].get_name()}: {customers[1].get_email()}")
+
+    # Test adding an e-book to the cart
+    print("\nTest: Adding e-book to the shopping cart")
+    add_to_cart()  # Assuming the first e-book in the list
+    cart.add_item(ebooks[1], quantity=1)  # Adding the second e-book to the cart
+    view_cart()
+
+    # Test removing an e-book from the cart
+    print("\nTest: Removing e-book from the shopping cart")
+    cart.remove_item(ebooks[1])  # Remove the second e-book from the cart
+    view_cart()
+
+    # Test applying a loyalty discount
+    print("\nTest: Applying loyalty discount")
+    cart.add_item(ebooks[0], quantity=3)  # Adding 3 of the first e-book
+    order = Order(customer=current_customer, cart=cart)
+    total_price = order.calculate_total_price()
+    print(f"Loyalty Discount Total Price: ${total_price:.2f}")
+
+    # Test applying a bulk discount
+    print("\nTest: Applying bulk discount")
+    cart.add_item(ebooks[0], quantity=5)  # Adding 5 e-books
+    order = Order(customer=current_customer, cart=cart)
+    total_price = order.calculate_total_price()
+    print(f"Bulk Discount Total Price: ${total_price:.2f}")
+
+    # Test invoice generation
+    print("\nTest: Invoice generation")
+    cart.add_item(ebooks[0], quantity=2)
+    cart.add_item(ebooks[1], quantity=1)
+    order = Order(customer=current_customer, cart=cart)
+    invoice = Invoice(order=order)
+    print(f"Invoice for {current_customer.get_name()}: {invoice}")
+    print(f"Total Price from Invoice: ${invoice.get_order().total_price():.2f}")
+
+if __name__ == '__main__':
+    run_tests()
