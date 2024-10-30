@@ -1,0 +1,14 @@
+'''
+It handles pricing information, such as computing the total 
+price with VAT. This class is flexible in regard to changes in tax rates 
+and may easily be extended with more pricing functions.
+'''
+
+# Pricing.py
+class Pricing:
+    def __init__(self, vat_rate=0.08):  # VAT rate of 8%
+        self.vat_rate = vat_rate
+
+    def calculate_total_with_vat(self, subtotal):
+        return subtotal * (1 + self.vat_rate)
+
