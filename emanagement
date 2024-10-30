@@ -1,0 +1,142 @@
+# emanagement.py
+
+from Ebook import Ebook
+from Customer import Customer
+from ShoppingCart import ShoppingCart
+from Order import Order
+from Invoice import Invoice
+
+# initial Sample data
+ebooks = [
+    Ebook(ebook_id=1, title="Learn Python", author="Jane Doe", publication_date="2023-01-01", genre="Programming", price=29.99),
+    Ebook(ebook_id=2, title="Data Science Basics", author="John Smith", publication_date="2023-06-15", genre="Data Science", price=39.99),
+]
+
+# inial data sample
+customers = [
+    Customer(customer_id=101, name="Alex Johnson", email="alex@example.com", is_loyalty_member=True),
+]
+
+# Initialize shopping cart
+cart = ShoppingCart()
+current_customer = None
+
+
+# Display Admin Menu
+def admin_menu():
+    print("\nAdmin Menu")
+    print("1. Add E-book")
+    print("2. View All E-books")
+    print("3. Remove E-book by ID")
+    print("4. Add Customer")
+    print("5. View All Customers")
+    print("6. Switch to Customer Menu")
+    print("7. Exit")
+
+# display customer menu
+def customer_menu():
+    print("\nCustomer Menu")
+    print("1. Select Customer by ID")
+    print("2. View E-books")
+    print("3. Add E-book to Cart")
+    print("4. View Cart")
+    print("5. Checkout")
+    print("6. Switch to Admin Menu")
+    print("7. Exit")
+
+# help add book to the store
+def add_ebook():
+    ebook_id = int(input("Enter E-book ID: "))
+    title = input("Enter Title: ")
+    author = input("Enter Author: ")
+    publication_date = input("Enter Publication Date (YYYY-MM-DD): ")
+    genre = input("Enter Genre: ")
+    price = float(input("Enter Price: "))
+    new_ebook = Ebook(ebook_id, title, author, publication_date, genre, price)
+    ebooks.append(new_ebook)
+    print(f"E-book '{title}' added successfully.")
+
+
+# Help remove e-book by ID
+def remove_ebook_by_id():
+    ebook_id = int(input("Enter E-book ID to remove: "))
+    global ebooks
+    ebooks = [ebook for ebook in ebooks if ebook.get_ebook_id() != ebook_id]
+    print(f"E-book with ID {ebook_id} removed successfully.")
+
+# help display all books
+def view_all_ebooks():
+    print("\nAvailable E-books:")
+    for ebook in ebooks:
+        print(ebook)
+
+# help admin add a customer
+def add_customer():
+    customer_id = int(input("Enter Customer ID: "))
+    name = input("Enter Name: ")
+    email = input("Enter Email: ")
+    is_loyalty_member = input("Is Loyalty Member? (y/n): ").lower() == 'y'
+    new_customer = Customer(customer_id, name, email, is_loyalty_member)
+    customers.append(new_customer)
+    print(f"Customer '{name}' added successfully.")
+
+# helper to display all customers
+def view_all_customers():
+    print("\nRegistered Customers:")
+    for customer in customers:
+        print(customer)
+
+
+## allow select a customer
+def select_customer():
+    global current_customer
+    customer_id = int(input("Enter Customer ID: "))
+    for customer in customers:
+        if customer.get_customer_id() == customer_id:
+            current_customer = customer
+            print(f"Customer '{current_customer.get_name()}' selected.")
+            return
+    print("Customer not found.")
+
+
+# help add item to cart
+def add_to_cart():
+    if current_customer is None:
+        print("Please select a customer first.")
+        return
+    ebook_id = int(input("Enter E-book ID to add to cart: "))
+    quantity = int(input("Enter quantity: "))
+    for ebook in ebooks:
+        if ebook.get_ebook_id() == ebook_id:
+            cart.add_item(ebook, quantity)
+            print(f"Added {quantity} of '{ebook.get_title()}' to cart.")
+            return
+    print("E-book not found.")
+
+
+# display all items in cart
+def view_cart():
+    if len(cart.get_items()) == 0:
+        print("Your cart is empty.")
+    else:
+        print("\nYour Cart:")
+        for ebook, quantity in cart.get_items().items():
+            print(f"{ebook.get_title()} x {quantity} -> ${ebook.get_price() * quantity:.2f}")
+
+
+# process cart at check out
+def checkout():
+    if current_customer is None:
+        print("Please select a customer before checking out.")
+        return
+    if len(cart.get_items()) == 0:
+        print("Your cart is empty.")
+        return
+    # Create order and invoice
+    order = Order(customer=current_customer, cart=cart)
+    invoice = Invoice(order=order)
+    print("\nInvoice:\n", invoice)
+    # Clear the cart after checkout
+    cart.get_items().clear()
+    print("Thank you for your purchase!")
+
